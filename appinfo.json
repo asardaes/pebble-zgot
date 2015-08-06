@@ -1,0 +1,97 @@
+{
+    "appKeys": {
+        "UNIT_TEMPERATURE": 1,
+        "WEATHER_TEMPERATURE": 0
+    },
+    "capabilities": [
+        "location",
+        "configurable"
+    ],
+    "companyName": "Apestowesome",
+    "longName": "Zelda's Gate of Time",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/ALL4.png",
+                "name": "IMAGE_GEARS_4",
+                "type": "png"
+            },
+            {
+                "file": "images/ALL3.png",
+                "name": "IMAGE_GEARS_3",
+                "type": "png"
+            },
+            {
+                "file": "images/ALL2.png",
+                "name": "IMAGE_GEARS_2",
+                "type": "png"
+            },
+            {
+                "file": "images/ALL1.png",
+                "name": "IMAGE_GEARS_1",
+                "type": "png"
+            },
+            {
+                "file": "images/ALL0.png",
+                "name": "IMAGE_GEARS_0",
+                "type": "png"
+            },
+            {
+                "file": "images/ButtonsNoBT.png",
+                "name": "IMAGE_BUTTONS_NO_BT",
+                "type": "png"
+            },
+            {
+                "file": "images/charge.png",
+                "name": "IMAGE_CHARGE",
+                "type": "png"
+            },
+            {
+                "file": "images/rupee.png",
+                "name": "IMAGE_RUPEE",
+                "type": "png"
+            },
+            {
+                "file": "images/HeartsFill.png",
+                "name": "IMAGE_HEARTS_FILL",
+                "type": "png"
+            },
+            {
+                "file": "images/HeartsEdge.png",
+                "name": "IMAGE_HEARTS_EDGE",
+                "type": "png"
+            },
+            {
+                "file": "images/ButtonsBT.png",
+                "name": "IMAGE_BUTTONS_BT",
+                "type": "png"
+            },
+            {
+                "characterRegex": "[\u00b0CF]",
+                "file": "fonts/arial.ttf",
+                "name": "FONT_DEGREE_14",
+                "type": "font"
+            },
+            {
+                "file": "fonts/ReturnofGanon.ttf",
+                "name": "FONT_DATE_16",
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9.\\-]",
+                "file": "fonts/HrMinSec.ttf",
+                "name": "FONT_ZELDA_16",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "2",
+    "shortName": "Zelda GoT",
+    "uuid": "09d365d4-c918-43fd-9813-23fbd95b71ef",
+    "versionCode": 1,
+    "versionLabel": "1.7",
+    "watchapp": {
+        "watchface": true
+    }
+}
