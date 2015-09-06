@@ -11,9 +11,9 @@ static BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_hearts_layer, *s_butt
 static GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap;
 static GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
 
-static char temperature[5];
+static char temperature[8];
 static char date_buffer[8];
-static char second_buffer[3];
+static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
@@ -212,7 +212,7 @@ static void update_time() {
 		strftime(date_buffer, sizeof(date_buffer), "%a %d", tick_time);
 		text_layer_set_text(s_date_layer, date_buffer);
 	} else {
-		strftime(date_buffer, sizeof(date_buffer), "%b %y", tick_time);
+		strftime(date_buffer, sizeof(date_buffer), "%b '%y", tick_time);
 		text_layer_set_text(s_date_layer, date_buffer);
 	}
 }
@@ -249,12 +249,6 @@ static void rotate_gears(struct tm *tick_time, TimeUnits units_changed) {
 			// Get initial weather, hopefully after things have settled down (AppMessage timing issues)...
 			// This also means that, if it fails at first, it will keep trying every minute (is that bad for battery?)
 			get_weather();
-			/*
-			anim_index = (int)(time(NULL) % 5) + 100;
-			anim = 1;
-			//update_time();
-			animate();
-			*/
 		}
 	}
 	
@@ -283,7 +277,7 @@ void handle_battery(BatteryChargeState charge_state) {
 																	 20));
 	layer_mark_dirty(bitmap_layer_get_layer(s_heartsfill_layer));
 	
-	if (charge_state.is_charging | charge_state.is_plugged) {
+	if (charge_state.is_charging) {
 		layer_set_hidden(bitmap_layer_get_layer(s_charge_layer), false);
 	} else {
 		layer_set_hidden(bitmap_layer_get_layer(s_charge_layer), true);
