@@ -5,7 +5,7 @@
 
 static Window *s_main_window;
 static TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;
-static GFont *s_zelda_font, *s_zelda_font_small, *s_degree_font;
+static GFont s_zelda_font, s_zelda_font_small, s_degree_font;
 
 static BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_hearts_layer, *s_buttons_layer, *s_charge_layer, *s_rupee_layer;
 static GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap;
@@ -245,7 +245,7 @@ static void rotate_gears(struct tm *tick_time, TimeUnits units_changed) {
 	update_time();
 	
 	if (units_changed & MINUTE_UNIT) {
-		if (weather_flag) {
+		if (bluetooth_connection_service_peek() && weather_flag) {
 			// Get initial weather, hopefully after things have settled down (AppMessage timing issues)...
 			// This also means that, if it fails at first, it will keep trying every minute (is that bad for battery?)
 			get_weather();
@@ -271,7 +271,9 @@ static void rotate_gears(struct tm *tick_time, TimeUnits units_changed) {
 
 /* ==================================================================================================================================================================== */
 
-void handle_battery(BatteryChargeState charge_state) {		
+void handle_battery(BatteryChargeState charge_state) {	
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
+	
 	layer_set_frame(bitmap_layer_get_layer(s_heartsfill_layer), GRect(0, 168-20, 
 																	 7*charge_state.charge_percent/10, 
 																	 20));
@@ -317,6 +319,17 @@ static void handle_tap(AccelAxisType axis, int32_t dir) {
 	}
 }
 
+// custom BUTTONS drawing function to handle transparency in each supported platform
+static void my_buttons_draw(Layer *layer, GContext *ctx) {
+#ifdef PBL_PLATFORM_APLITE
+	graphics_context_set_compositing_mode(ctx, GCompOpOr);
+	graphics_draw_bitmap_in_rect(ctx, s_buttons_bitmap, gbitmap_get_bounds(s_buttons_bitmap));
+#elif PBL_PLATFORM_BASALT
+	graphics_context_set_compositing_mode(ctx, GCompOpSet);
+	graphics_draw_bitmap_in_rect(ctx, s_buttons_bitmap, gbitmap_get_bounds(s_buttons_bitmap));
+#endif
+}
+
 /* ==================================================================================================================================================================== */
 
 static void main_window_load(Window *window) {	
@@ -342,7 +355,7 @@ static void main_window_load(Window *window) {
 	// Buttons layer
 	s_buttons_layer = bitmap_layer_create(GRect(144-58, 168-58, 58, 58));
 	bitmap_layer_set_background_color(s_buttons_layer, GColorClear);
-	bitmap_layer_set_compositing_mode(s_buttons_layer, GCompOpOr);
+	layer_set_update_proc(bitmap_layer_get_layer(s_buttons_layer), my_buttons_draw);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_buttons_layer));
 	
 	// Hour and Minute layer
@@ -379,7 +392,6 @@ static void main_window_load(Window *window) {
 	
 	s_heartsfill_layer = bitmap_layer_create(GRect(0, 168-20, 70, 20));
 	bitmap_layer_set_background_color(s_heartsfill_layer, GColorClear);
-	bitmap_layer_set_compositing_mode(s_heartsfill_layer, GCompOpOr);
 	s_heartsfill_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEARTS_FILL);
 	bitmap_layer_set_bitmap(s_heartsfill_layer, s_heartsfill_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_heartsfill_layer));
@@ -387,7 +399,6 @@ static void main_window_load(Window *window) {
 	// Charge layer
 	s_charge_layer = bitmap_layer_create(GRect(1, 168-20-15-18, 16, 16));
 	bitmap_layer_set_background_color(s_charge_layer, GColorClear);
-	bitmap_layer_set_compositing_mode(s_charge_layer, GCompOpOr);
 	s_charge_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE);
 	bitmap_layer_set_bitmap(s_charge_layer, s_charge_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_charge_layer));
@@ -552,9 +563,6 @@ static void init() {
 		.load = main_window_load,
 		.unload = main_window_unload,
 	});
-	
-	// Make window fullscreen
-	window_set_fullscreen(s_main_window, true);
 
 	// Show the Window on the watch, with animated=true
 	window_stack_push(s_main_window, true);

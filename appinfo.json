@@ -13,6 +13,22 @@
     "resources": {
         "media": [
             {
+                "file": "images/ButtonsNoBTtrans.png",
+                "name": "IMAGE_BUTTONS_NO_BT",
+                "targetPlatforms": [
+                    "basalt"
+                ],
+                "type": "png"
+            },
+            {
+                "file": "images/ButtonsBTtrans.png",
+                "name": "IMAGE_BUTTONS_BT",
+                "targetPlatforms": [
+                    "basalt"
+                ],
+                "type": "png"
+            },
+            {
                 "file": "images/ALL4.png",
                 "name": "IMAGE_GEARS_4",
                 "type": "png"
@@ -40,6 +56,9 @@
             {
                 "file": "images/ButtonsNoBT.png",
                 "name": "IMAGE_BUTTONS_NO_BT",
+                "targetPlatforms": [
+                    "aplite"
+                ],
                 "type": "png"
             },
             {
@@ -65,6 +84,9 @@
             {
                 "file": "images/ButtonsBT.png",
                 "name": "IMAGE_BUTTONS_BT",
+                "targetPlatforms": [
+                    "aplite"
+                ],
                 "type": "png"
             },
             {
@@ -86,11 +108,14 @@
             }
         ]
     },
-    "sdkVersion": "2",
+    "sdkVersion": "3",
     "shortName": "Zelda GoT",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
     "uuid": "09d365d4-c918-43fd-9813-23fbd95b71ef",
-    "versionCode": 1,
-    "versionLabel": "1.7",
+    "versionLabel": "2.0",
     "watchapp": {
         "watchface": true
     }
