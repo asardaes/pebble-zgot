@@ -8,7 +8,7 @@
         "configurable"
     ],
     "companyName": "Apestowesome",
-    "enableMultiJS": false,
+    "enableMultiJS": true,
     "longName": "Zelda's Gate of Time",
     "projectType": "native",
     "resources": {
