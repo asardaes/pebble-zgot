@@ -8,17 +8,47 @@
         "configurable"
     ],
     "companyName": "Apestowesome",
+    "enableMultiJS": false,
     "longName": "Zelda's Gate of Time",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/ButtonsNoBT.png",
+                "memoryFormat": "1Bit",
+                "name": "IMAGE_BUTTONS_NO_BT",
+                "targetPlatforms": [
+                    "aplite"
+                ],
+                "type": "bitmap"
+            },
+            {
+                "file": "images/charge.png",
+                "name": "IMAGE_CHARGE",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/HeartsFill.png",
+                "name": "IMAGE_HEARTS_FILL",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/HeartsEdge.png",
+                "name": "IMAGE_HEARTS_EDGE",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/rupee.png",
+                "name": "IMAGE_RUPEE",
+                "type": "bitmap"
+            },
             {
                 "file": "images/ButtonsNoBTtrans.png",
                 "name": "IMAGE_BUTTONS_NO_BT",
                 "targetPlatforms": [
                     "basalt"
                 ],
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ButtonsBTtrans.png",
@@ -26,68 +56,41 @@
                 "targetPlatforms": [
                     "basalt"
                 ],
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ALL4.png",
                 "name": "IMAGE_GEARS_4",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ALL3.png",
                 "name": "IMAGE_GEARS_3",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ALL2.png",
                 "name": "IMAGE_GEARS_2",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ALL1.png",
                 "name": "IMAGE_GEARS_1",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ALL0.png",
                 "name": "IMAGE_GEARS_0",
-                "type": "png"
-            },
-            {
-                "file": "images/ButtonsNoBT.png",
-                "name": "IMAGE_BUTTONS_NO_BT",
-                "targetPlatforms": [
-                    "aplite"
-                ],
-                "type": "png"
-            },
-            {
-                "file": "images/charge.png",
-                "name": "IMAGE_CHARGE",
-                "type": "png"
-            },
-            {
-                "file": "images/rupee.png",
-                "name": "IMAGE_RUPEE",
-                "type": "png"
-            },
-            {
-                "file": "images/HeartsFill.png",
-                "name": "IMAGE_HEARTS_FILL",
-                "type": "png"
-            },
-            {
-                "file": "images/HeartsEdge.png",
-                "name": "IMAGE_HEARTS_EDGE",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/ButtonsBT.png",
+                "memoryFormat": "1Bit",
                 "name": "IMAGE_BUTTONS_BT",
                 "targetPlatforms": [
                     "aplite"
                 ],
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "characterRegex": "[\u00b0CF]",

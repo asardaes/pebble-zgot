@@ -76,7 +76,8 @@ Pebble.addEventListener('appmessage',
 Pebble.addEventListener('showConfiguration',
 	function(e) {
 		console.log('showConfiguration event');
-		Pebble.openURL('https://dl.dropboxusercontent.com/u/8602374/Zelda_GoT_Config.html');
+		//Pebble.openURL('https://dl.dropboxusercontent.com/u/8602374/Zelda_GoT_Config.html');
+		Pebble.openURL('http://asardaes.github.io/pebble-zgot/');
 	}
 );
 
