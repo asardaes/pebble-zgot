@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Config</title>
+  </head>
+  <body>
+    <h1>Configuration</h1>
+    <p>Choose watchface settings</p>
+
+    <p>Temperature unit:
+    <select id="unit_temperature">
+      <option value="C">Celsius</option>
+      <option value="F">Fahrenheit</option>
+    </select>
+    </p>
+
+    <p>
+    <button id="save_button">Save</button>
+    </p>
+
+    <script>
+      //Setup to allow easy adding more options later
+      function saveOptions() {
+        var tunit = document.getElementById("unit_temperature");
+
+        var options = {
+          "tunit": tunit.options[tunit.selectedIndex].value
+        }
+        
+        return options;
+      };
+
+      var submitButton = document.getElementById("save_button");
+      submitButton.addEventListener("click", 
+        function() {
+          console.log("Submit");
+
+          var options = saveOptions();
+          var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(options));
+          
+          window.location.href = location;
+        }, 
+		false);
+    </script>
+  </body>
+</html>
