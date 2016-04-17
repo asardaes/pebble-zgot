@@ -22,8 +22,6 @@ void handle_bt(bool connected);
 
 void handle_tap(AccelAxisType axis, int32_t dir);
 
-void my_buttons_draw(Layer *layer, GContext *ctx);
-
 /* ===================================================================================================================== */
 
 void main_window_load(Window *window);

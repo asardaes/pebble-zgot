@@ -31,7 +31,7 @@ static bool t_unit = 0; // false (°C) by default
 // static char *test[] = {"Jan 01", "Feb 12", "Mar 31", "Apr 28", "May 15", "Jun 09", "Jul 22", "Aug 10", "Sep 20", "Oct 30", "Nov 26", "Dec 18"};
 // static int t = 0;
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void animate() {
 	bool end = 0;
@@ -136,7 +136,7 @@ void animate() {
 	}
 }
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void update_time() {
 	// Get a tm structure
@@ -225,14 +225,14 @@ void rotate_gears(struct tm *tick_time, TimeUnits units_changed) {
 	*/
 }
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void handle_battery(BatteryChargeState charge_state) {	
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
 	
 	layer_set_frame(bitmap_layer_get_layer(s_heartsfill_layer), GRect(0, 168-20, 
-																	 7*charge_state.charge_percent/10, 
-																	 20));
+																	  7*charge_state.charge_percent/10, 
+																	  20));
 	layer_mark_dirty(bitmap_layer_get_layer(s_heartsfill_layer));
 	
 	if (charge_state.is_charging) {
@@ -277,7 +277,7 @@ void handle_tap(AccelAxisType axis, int32_t dir) {
 	}
 }
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void main_window_load(Window *window) {	
 	// Black background, 144 × 168 pixels, 176 PPI
@@ -442,7 +442,7 @@ void main_window_unload(Window *window) {
 	fonts_unload_custom_font(s_degree_font);
 }
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 	// Read first item
@@ -494,7 +494,7 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 	}
 }
 
-/* ==================================================================================================================================================================== */
+/* ===================================================================================================================== */
 
 void init() {
 	if (persist_exists(UNIT_TEMPERATURE))
@@ -534,7 +534,6 @@ void init() {
 	app_message_register_outbox_sent(outbox_sent_callback);
 	
 	// Open AppMessage
-	//AppMessageResult res = app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 	AppMessageResult res = app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgOpen: %s", translate_error(res));
 }
