@@ -159,9 +159,14 @@ void update_time() {
 	text_layer_set_text(s_hour_layer, hour_buffer);
 	text_layer_set_text(s_min_layer, min_buffer);
 	text_layer_set_text(s_second_layer, second_buffer);
-	//text_layer_set_text(s_hour_layer, "12");
-	//text_layer_set_text(s_min_layer, "34");
-	//text_layer_set_text(s_second_layer, "04");
+
+	// Debug
+	/*
+	text_layer_set_text(s_hour_layer, "12");
+	text_layer_set_text(s_min_layer, "34");
+	snprintf(second_buffer, sizeof(second_buffer), "0%d", (int)(time(NULL) % 5));
+	text_layer_set_text(s_second_layer, second_buffer);
+	*/
 	
 	// Date
 	if (!anim) {
