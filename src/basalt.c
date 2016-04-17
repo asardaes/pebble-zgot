@@ -280,8 +280,8 @@ void handle_tap(AccelAxisType axis, int32_t dir) {
 /* ===================================================================================================================== */
 
 void main_window_load(Window *window) {	
-	// Black background, 144 × 168 pixels, 176 PPI
-	window_set_background_color(window, GColorBlack);
+	// Background, 144 × 168 pixels, 176 PPI
+	window_set_background_color(window, GColorOxfordBlue);
 	
 	// Assign GFont
 	s_zelda_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ZELDA_16));
@@ -290,7 +290,8 @@ void main_window_load(Window *window) {
 	
 	// Gears layers
 	s_gears_layer = bitmap_layer_create(GRect(0, 0, 144, 144));
-	bitmap_layer_set_compositing_mode(s_gears_layer, GCompOpAssign);
+	bitmap_layer_set_background_color(s_gears_layer, GColorClear);
+	bitmap_layer_set_compositing_mode(s_gears_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_gears_layer));
 	
 	s_gears_bitmap_0 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
@@ -341,6 +342,7 @@ void main_window_load(Window *window) {
 	// Hearts layers
 	s_heartsfill_layer = bitmap_layer_create(GRect(0, 168-20, 70, 20));
 	bitmap_layer_set_background_color(s_heartsfill_layer, GColorClear);
+	bitmap_layer_set_compositing_mode(s_heartsfill_layer, GCompOpSet);
 	s_heartsfill_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEARTS_FILL);
 	bitmap_layer_set_bitmap(s_heartsfill_layer, s_heartsfill_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_heartsfill_layer));
@@ -355,6 +357,7 @@ void main_window_load(Window *window) {
 	// Charge layer
 	s_charge_layer = bitmap_layer_create(GRect(1, 168-20-15-18, 16, 16));
 	bitmap_layer_set_background_color(s_charge_layer, GColorClear);
+	bitmap_layer_set_compositing_mode(s_charge_layer, GCompOpSet);
 	s_charge_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE);
 	bitmap_layer_set_bitmap(s_charge_layer, s_charge_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_charge_layer));
@@ -384,6 +387,7 @@ void main_window_load(Window *window) {
 	// Rupee layer
 	s_rupee_layer = bitmap_layer_create(GRect(1, 168-20-15, 13, 13));
 	bitmap_layer_set_background_color(s_rupee_layer, GColorClear);
+	bitmap_layer_set_compositing_mode(s_rupee_layer, GCompOpSet);
 	s_rupee_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_RUPEE);
 	bitmap_layer_set_bitmap(s_rupee_layer, s_rupee_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_rupee_layer));
