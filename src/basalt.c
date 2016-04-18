@@ -3,15 +3,19 @@
 #include <pebble.h>
 #include "common.h"
 
-Window *s_main_window;
-TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;
-GFont s_zelda_font, s_zelda_font_small, s_degree_font;
-
-BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_hearts_layer, *s_buttons_layer, *s_charge_layer, *s_rupee_layer, *s_hookshot_layer;
-GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap, *s_hookshot_bitmap;
-GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
-
 extern bool temp_unit;
+
+static GFont s_zelda_font, s_zelda_font_small, s_degree_font;
+
+static BitmapLayer *s_hearts_layer, *s_buttons_layer, *s_rupee_layer, *s_hookshot_layer;
+
+static GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap, *s_hookshot_bitmap;
+
+TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;
+
+BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_charge_layer;
+
+GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
 
 /* ===================================================================================================================== */
 

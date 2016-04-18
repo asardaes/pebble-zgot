@@ -5,13 +5,13 @@ extern void main_window_load(Window *window);
 extern void main_window_unload(Window *window);
 extern void handle_bt(bool connected);
 
-extern Window *s_main_window;
 extern TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;
-extern GFont s_zelda_font, s_zelda_font_small, s_degree_font;
 
-extern BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_hearts_layer, *s_buttons_layer, *s_charge_layer, *s_rupee_layer;
-extern GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap;
+extern BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_charge_layer;
+
 extern GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
+
+static Window *s_main_window;
 
 static char temperature[8];
 static char date_buffer[8];
