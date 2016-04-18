@@ -23,17 +23,64 @@ static int anim_freq = 1; // 1 second by default
 static int anim_index = 0;
 static int counter = 0;
 
-static bool weather_flag = 1; // true initially
-static bool anim = 0;
-static bool direction = 0;
+static bool weather_flag = true;
+static bool shake = true;
+static bool anim = false;
+static bool direction = false;
 
 static uint32_t anim_duration = 75;
 
-bool t_unit = 0; // false (°C) by default
+bool t_unit = false; // (°C) by default
 
 /* ===================================================================================================================== */
 
-void animate() {
+static char *translate_error(AppMessageResult result) {
+  	switch (result) {
+		case APP_MSG_OK: return "APP_MSG_OK";
+		case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
+		case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
+		case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
+		case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
+		case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
+		case APP_MSG_BUSY: return "APP_MSG_BUSY";
+		case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
+		case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
+		case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
+		case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
+		case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
+		case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
+		case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
+		default: return "UNKNOWN ERROR";
+  }
+}
+
+static void get_weather() {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Getting new weather info.");
+
+	// Begin dictionary
+	DictionaryIterator *iter;
+	
+	AppMessageResult res = app_message_outbox_begin(&iter);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgBegin: %s", translate_error(res));
+
+	if (iter == NULL) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "NULL iter.");
+		dict_write_end(iter);
+		return;
+	}
+
+	// Add a key-value pair
+	dict_write_uint8(iter, 0, 0);
+	dict_write_end(iter);
+
+	// Send the message!
+	res = app_message_outbox_send();
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgSend: %s", translate_error(res));
+}
+
+/* ===================================================================================================================== */
+
+static void animate() {
 	bool end = 0;
 	bool stop = 0; 
 	bool increase = direction;
@@ -156,7 +203,7 @@ void animate() {
 
 /* ===================================================================================================================== */
 
-void update_time() {
+static void update_time() {
 	// Get a tm structure
 	time_t t = time(NULL); 
 	struct tm *tick_time = localtime(&t);
@@ -196,8 +243,8 @@ void update_time() {
 	}
 }
 
-void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-	if (!anim) {
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+	if (!shake | !anim) {
 		int which_case = 0;
 
 		switch (anim_freq) {
@@ -279,7 +326,11 @@ void handle_battery(BatteryChargeState charge_state) {
 	}
 }
 
-void handle_tap(AccelAxisType axis, int32_t dir) {
+static void unshake() {
+	anim = 0;
+}
+
+static void handle_tap(AccelAxisType axis, int32_t dir) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Entering handle_tap");
 	
 	if (!anim) {
@@ -295,59 +346,16 @@ void handle_tap(AccelAxisType axis, int32_t dir) {
 
 		anim = 1;
 		update_time();
-		animate();
+		if (shake)
+			animate();
+		else
+			app_timer_register(5000, unshake, NULL);
 	}
 }
 
 /* ===================================================================================================================== */
 
-char *translate_error(AppMessageResult result) {
-  	switch (result) {
-		case APP_MSG_OK: return "APP_MSG_OK";
-		case APP_MSG_SEND_TIMEOUT: return "APP_MSG_SEND_TIMEOUT";
-		case APP_MSG_SEND_REJECTED: return "APP_MSG_SEND_REJECTED";
-		case APP_MSG_NOT_CONNECTED: return "APP_MSG_NOT_CONNECTED";
-		case APP_MSG_APP_NOT_RUNNING: return "APP_MSG_APP_NOT_RUNNING";
-		case APP_MSG_INVALID_ARGS: return "APP_MSG_INVALID_ARGS";
-		case APP_MSG_BUSY: return "APP_MSG_BUSY";
-		case APP_MSG_BUFFER_OVERFLOW: return "APP_MSG_BUFFER_OVERFLOW";
-		case APP_MSG_ALREADY_RELEASED: return "APP_MSG_ALREADY_RELEASED";
-		case APP_MSG_CALLBACK_ALREADY_REGISTERED: return "APP_MSG_CALLBACK_ALREADY_REGISTERED";
-		case APP_MSG_CALLBACK_NOT_REGISTERED: return "APP_MSG_CALLBACK_NOT_REGISTERED";
-		case APP_MSG_OUT_OF_MEMORY: return "APP_MSG_OUT_OF_MEMORY";
-		case APP_MSG_CLOSED: return "APP_MSG_CLOSED";
-		case APP_MSG_INTERNAL_ERROR: return "APP_MSG_INTERNAL_ERROR";
-		default: return "UNKNOWN ERROR";
-  }
-}
-
-void get_weather() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Getting new weather info.");
-
-	// Begin dictionary
-	DictionaryIterator *iter;
-	
-	AppMessageResult res = app_message_outbox_begin(&iter);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgBegin: %s", translate_error(res));
-
-	if (iter == NULL) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "NULL iter.");
-		dict_write_end(iter);
-		return;
-	}
-
-	// Add a key-value pair
-	dict_write_uint8(iter, 0, 0);
-	dict_write_end(iter);
-
-	// Send the message!
-	res = app_message_outbox_send();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgSend: %s", translate_error(res));
-}
-
-/* ===================================================================================================================== */
-
-void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 	// Read first item
 	Tuple *t = dict_read_first(iterator);
 	
@@ -394,10 +402,8 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 			break;
 
 			case SHAKE:
-			if (t->value->int32)
-				accel_tap_service_subscribe(handle_tap);
-			else
-				accel_tap_service_unsubscribe();
+			shake = t->value->int32;
+			persist_write_bool(SHAKE, shake);
 			break;
 			
 			default:
@@ -410,23 +416,21 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 	}
 }
 
-void inbox_dropped_callback(AppMessageResult reason, void *context) {
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
 	APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!: %s", translate_error(reason));
 }
 
-void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
 	APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!: %s", translate_error(reason));
 }
 
-void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
 /* ===================================================================================================================== */
 
 void init() {
-	bool shake = true;
-
 	if (persist_exists(UNIT_TEMPERATURE))
 		t_unit = persist_read_bool(UNIT_TEMPERATURE);
 
@@ -458,8 +462,7 @@ void init() {
 	bluetooth_connection_service_subscribe(&handle_bt);
 	
 	// Subscribe to the accelerometer tap service
-	if (shake)
-		accel_tap_service_subscribe(handle_tap);
+	accel_tap_service_subscribe(handle_tap);
 	
 	// Make sure the time is displayed from the start
 	update_time();
