@@ -23,6 +23,10 @@
 #endif
 
 void handle_battery(BatteryChargeState charge_state);
+void handle_bt(bool connected);
+
+void main_window_load(Window *window);
+void main_window_unload(Window *window);
 
 void init();
 void deinit();

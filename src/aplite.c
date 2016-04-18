@@ -1,9 +1,7 @@
 #ifdef PBL_PLATFORM_APLITE
 
 #include <pebble.h>
-
 #include "common.h"
-#include "aplite.h"
 
 Window *s_main_window;
 TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;

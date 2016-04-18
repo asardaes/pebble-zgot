@@ -1,13 +1,9 @@
 #include <pebble.h>
-
-#ifdef PBL_PLATFORM_APLITE
-	#include "aplite.h"
-#elif PBL_PLATFORM_BASALT
-	#include "basalt.h"
-#endif
+#include "common.h"
 
 int main(void) {	
 	init();
 	app_event_loop();
 	deinit();
 }
+
