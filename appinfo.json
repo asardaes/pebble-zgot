@@ -2,7 +2,8 @@
     "appKeys": {
         "WEATHER_TEMPERATURE": 0,
         "UNIT_TEMPERATURE": 1,
-	"ANIM_FREQ": 2
+	"ANIM_FREQ": 2,
+	"SHAKE": 3
     },
     "capabilities": [
         "location",

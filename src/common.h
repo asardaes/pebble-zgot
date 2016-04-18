@@ -14,6 +14,10 @@
 #define ANIM_FREQ 2
 #endif
 
+#ifndef SHAKE
+#define SHAKE 3
+#endif
+
 /* ===================================================================================================================== */
 
 char *translate_error(AppMessageResult result);

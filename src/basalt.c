@@ -19,7 +19,7 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
-static int anim_freq = 12;
+static int anim_freq = 1;
 static int anim_index = 0;
 static int counter = 0;
 static bool anim = 0;
@@ -539,6 +539,13 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Animation frequency: %d", anim_freq);
 			persist_write_int(ANIM_FREQ, anim_freq);
 			break;
+
+			case SHAKE:
+			if (t->value->int32)
+				accel_tap_service_subscribe(handle_tap);
+			else
+				accel_tap_service_unsubscribe();
+			break;
 			
 			default:
 			APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -553,11 +560,16 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 /* ===================================================================================================================== */
 
 void init() {
+	bool shake = true;
+
 	if (persist_exists(UNIT_TEMPERATURE))
 		t_unit = persist_read_bool(UNIT_TEMPERATURE);
 
 	if (persist_exists(ANIM_FREQ))
 		anim_freq = persist_read_int(ANIM_FREQ);
+
+	if (persist_exists(SHAKE))
+		shake = persist_read_bool(SHAKE);
 	
 	// Create main Window element and assign to pointer
 	s_main_window = window_create();
@@ -581,7 +593,8 @@ void init() {
 	bluetooth_connection_service_subscribe(&handle_bt);
 	
 	// Subscribe to the accelerometer tap service
-	accel_tap_service_subscribe(handle_tap);
+	if (shake)
+		accel_tap_service_subscribe(handle_tap);
 	
 	// Make sure the time is displayed from the start
 	update_time();
