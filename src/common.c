@@ -474,10 +474,13 @@ void init() {
 		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	
 	// Register battery service
-	battery_state_service_subscribe(&handle_battery);
+	battery_state_service_subscribe(handle_battery);
 	
 	// Register bluetooth service
-	bluetooth_connection_service_subscribe(&handle_bt);
+	connection_service_subscribe((ConnectionHandlers) {
+		.pebble_app_connection_handler = handle_bt,
+		NULL
+	});
 	
 	// Subscribe to the accelerometer tap service
 	accel_tap_service_subscribe(handle_tap);

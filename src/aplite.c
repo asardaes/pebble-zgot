@@ -146,7 +146,7 @@ void main_window_load(Window *window) {
 	handle_battery(battery_state_service_peek());
 	
 	// Get BT status when window loads;
-	handle_bt(bluetooth_connection_service_peek());
+	handle_bt(connection_service_peek_pebble_app_connection());
 }
 
 void main_window_unload(Window *window) {
