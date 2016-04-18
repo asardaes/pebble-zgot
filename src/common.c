@@ -1,10 +1,6 @@
 #include <pebble.h>
 #include "common.h"
 
-extern void main_window_load(Window *window);
-extern void main_window_unload(Window *window);
-extern void handle_bt(bool connected);
-
 extern TextLayer *date_layer, *temp_layer, *degree_layer, *hour_layer, *min_layer, *second_layer;
 
 extern BitmapLayer *gears_layer, *heartsfill_layer, *charge_layer;
