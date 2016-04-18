@@ -5,11 +5,11 @@ extern void main_window_load(Window *window);
 extern void main_window_unload(Window *window);
 extern void handle_bt(bool connected);
 
-extern TextLayer *s_date_layer, *s_temp_layer, *s_degree_layer, *s_hour_layer, *s_min_layer, *s_second_layer;
+extern TextLayer *date_layer, *temp_layer, *degree_layer, *hour_layer, *min_layer, *second_layer;
 
-extern BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_charge_layer;
+extern BitmapLayer *gears_layer, *heartsfill_layer, *charge_layer;
 
-extern GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
+extern GBitmap *gears_bitmap_0, *gears_bitmap_1, *gears_bitmap_2, *gears_bitmap_3, *gears_bitmap_4;
 
 static Window *s_main_window;
 
@@ -101,7 +101,7 @@ static void animate() {
 	
 	switch (anim_index % 5) {
 		case 0:
-		bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_0);
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_0);
 		
 		if (!end) {
 			if (increase)
@@ -113,7 +113,7 @@ static void animate() {
 		break;
 		// ===================================================================
 		case 1:
-		bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_1);
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_1);
 		
 		if (!end) {
 			if (increase)
@@ -125,7 +125,7 @@ static void animate() {
 		break;
 		// ===================================================================
 		case 2:
-		bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_2);
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_2);
 		
 		if (!end) {
 			if (increase)
@@ -137,7 +137,7 @@ static void animate() {
 		break;
 		// ===================================================================
 		case 3:
-		bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_3);
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_3);
 		
 		if (!end) {
 			if (increase)
@@ -149,7 +149,7 @@ static void animate() {
 		break;
 		// ===================================================================
 		case 4:
-		bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_4);
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_4);
 		
 		if (!end) {
 			if (increase)
@@ -226,25 +226,25 @@ static void update_time() {
 		strftime(second_buffer, sizeof(second_buffer), "%j", tick_time);
 
 	// Display this time on the TextLayer
-	text_layer_set_text(s_hour_layer, hour_buffer);
-	text_layer_set_text(s_min_layer, min_buffer);
-	text_layer_set_text(s_second_layer, second_buffer);
+	text_layer_set_text(hour_layer, hour_buffer);
+	text_layer_set_text(min_layer, min_buffer);
+	text_layer_set_text(second_layer, second_buffer);
 
 	// Debug
 	/*
-	text_layer_set_text(s_hour_layer, "12");
-	text_layer_set_text(s_min_layer, "34");
+	text_layer_set_text(hour_layer, "12");
+	text_layer_set_text(min_layer, "34");
 	snprintf(second_buffer, sizeof(second_buffer), "0%d", (int)(time(NULL) % 5));
-	text_layer_set_text(s_second_layer, second_buffer);
+	text_layer_set_text(second_layer, second_buffer);
 	*/
 	
 	// Date
 	if (!anim) {
 		strftime(date_buffer, sizeof(date_buffer), "%a %d", tick_time);
-		text_layer_set_text(s_date_layer, date_buffer);
+		text_layer_set_text(date_layer, date_buffer);
 	} else {
 		strftime(date_buffer, sizeof(date_buffer), "%b '%y", tick_time);
-		text_layer_set_text(s_date_layer, date_buffer);
+		text_layer_set_text(date_layer, date_buffer);
 	}
 }
 
@@ -272,23 +272,23 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 		switch (which_case) {
 			case 0:
-			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_0);
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_0);
 			break;
 
 			case 1:
-			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_1);
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_1);
 			break;
 
 			case 2:
-			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_2);
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_2);
 			break;
 
 			case 3:
-			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_3);
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_3);
 			break;
 
 			case 4:
-			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_4);
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_4);
 			break;
 		}
 	}
@@ -307,7 +307,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	if (units_changed & HOUR_UNIT) {
 		// To mark that temperature should be updated
 		weather_flag = 1;
-		text_layer_set_text(s_temp_layer, "...");
+		text_layer_set_text(temp_layer, "...");
 		
 		// Try to get weather
 		get_weather();
@@ -319,15 +319,15 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 void handle_battery(BatteryChargeState charge_state) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
 	
-	layer_set_frame(bitmap_layer_get_layer(s_heartsfill_layer), GRect(0, 168-20,
+	layer_set_frame(bitmap_layer_get_layer(heartsfill_layer), GRect(0, 168-20,
 									  7*charge_state.charge_percent/10, 
 									  20));
-	layer_mark_dirty(bitmap_layer_get_layer(s_heartsfill_layer));
+	layer_mark_dirty(bitmap_layer_get_layer(heartsfill_layer));
 	
 	if (charge_state.is_charging) {
-		layer_set_hidden(bitmap_layer_get_layer(s_charge_layer), false);
+		layer_set_hidden(bitmap_layer_get_layer(charge_layer), false);
 	} else {
-		layer_set_hidden(bitmap_layer_get_layer(s_charge_layer), true);
+		layer_set_hidden(bitmap_layer_get_layer(charge_layer), true);
 	}
 }
 
@@ -375,7 +375,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			} else {
 				snprintf(temperature, sizeof(temperature), "%d", (int)t->value->int32);
 			}
-			text_layer_set_text(s_temp_layer, temperature);
+			text_layer_set_text(temp_layer, temperature);
 			
 			// Mark that weather shouldn't be updated any more
 			weather_flag = 0; 
@@ -384,17 +384,17 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			case UNIT_TEMPERATURE:
 			if (strcmp(t->value->cstring, "C") == 0) {
 				persist_write_bool(UNIT_TEMPERATURE, false);
-				text_layer_set_text(s_degree_layer, "\u00B0C");
+				text_layer_set_text(degree_layer, "\u00B0C");
 				temp_unit = 0;
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Setting temperature units to celsius");
 			} else if (strcmp(t->value->cstring, "F") == 0) {
 				persist_write_bool(UNIT_TEMPERATURE, true);
-				text_layer_set_text(s_degree_layer, "\u00B0F");
+				text_layer_set_text(degree_layer, "\u00B0F");
 				temp_unit = 1;
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Setting temperature units to fahrenheit");
 			}
 			
-			text_layer_set_text(s_temp_layer, "...");
+			text_layer_set_text(temp_layer, "...");
 			weather_flag = 1;
 			get_weather();
 			break;
