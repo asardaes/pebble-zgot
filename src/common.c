@@ -126,12 +126,12 @@ void animate() {
 			anim_target = t % 5;
 			break;
 
-			case 12:
-			anim_target = localtime(&t)->tm_sec / 12;
-			break;
-
 			case 60:
 			anim_target = localtime(&t)->tm_min % 5;
+			break;
+
+			default:
+			anim_target = localtime(&t)->tm_sec / anim_freq % 5;
 			break;
 		}
 		
@@ -209,12 +209,12 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 			which_case = tick_time->tm_sec % 5;
 			break;
 
-			case 12:
-			which_case = tick_time->tm_sec / 12;
-			break;
-
 			case 60:
 			which_case = tick_time->tm_min % 5;
+			break;
+
+			default:
+			which_case = tick_time->tm_sec / anim_freq % 5;
 			break;
 		}
 
