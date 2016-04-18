@@ -103,3 +103,4 @@ Pebble.addEventListener('webviewclosed',
 		);
 	}
 );
+
