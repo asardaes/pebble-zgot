@@ -30,7 +30,7 @@ static bool direction = false;
 
 static uint32_t anim_duration = 75;
 
-bool t_unit = false; // (°C) by default
+bool temp_unit = false; // (°C) by default
 
 /* ===================================================================================================================== */
 
@@ -365,7 +365,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 		switch(t->key) {
 			case WEATHER_TEMPERATURE:
 			// true = Fahrenheit
-			if (t_unit) {
+			if (temp_unit) {
 				snprintf(temperature, sizeof(temperature), "%d",  ((int)t->value->int32) * 9/5 + 32 );
 				//APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature in Fahrenheit: %d", ((int)t->value->int32) * 9/5 + 32);
 			} else {
@@ -381,12 +381,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			if (strcmp(t->value->cstring, "C") == 0) {
 				persist_write_bool(UNIT_TEMPERATURE, false);
 				text_layer_set_text(s_degree_layer, "\u00B0C");
-				t_unit = 0;
+				temp_unit = 0;
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Setting temperature units to celsius");
 			} else if (strcmp(t->value->cstring, "F") == 0) {
 				persist_write_bool(UNIT_TEMPERATURE, true);
 				text_layer_set_text(s_degree_layer, "\u00B0F");
-				t_unit = 1;
+				temp_unit = 1;
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Setting temperature units to fahrenheit");
 			}
 			
@@ -432,7 +432,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 void init() {
 	if (persist_exists(UNIT_TEMPERATURE))
-		t_unit = persist_read_bool(UNIT_TEMPERATURE);
+		temp_unit = persist_read_bool(UNIT_TEMPERATURE);
 
 	if (persist_exists(ANIM_FREQ))
 		anim_freq = persist_read_int(ANIM_FREQ);

@@ -13,7 +13,7 @@ BitmapLayer *s_gears_layer, *s_heartsfill_layer, *s_hearts_layer, *s_buttons_lay
 GBitmap *s_heartsfill_bitmap, *s_hearts_bitmap, *s_buttons_bitmap, *s_charge_bitmap, *s_rupee_bitmap, *s_hookshot_bitmap;
 GBitmap *s_gears_bitmap_0, *s_gears_bitmap_1, *s_gears_bitmap_2, *s_gears_bitmap_3, *s_gears_bitmap_4;
 
-extern bool t_unit;
+extern bool temp_unit;
 
 /* ===================================================================================================================== */
 
@@ -130,7 +130,7 @@ void main_window_load(Window *window) {
 	text_layer_set_font(s_degree_layer, s_degree_font);
 	text_layer_set_text_alignment(s_degree_layer, GTextAlignmentCenter);	
 	
-	if (t_unit)
+	if (temp_unit)
 		text_layer_set_text(s_degree_layer, "\u00B0F");
 	else
 		text_layer_set_text(s_degree_layer, "\u00B0C");
