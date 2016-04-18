@@ -536,6 +536,8 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 
 			case ANIM_FREQ:
 			anim_freq = t->value->int32;
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Animation frequency: %d", anim_freq);
+			persist_write_int(ANIM_FREQ, anim_freq);
 			break;
 			
 			default:
@@ -553,6 +555,9 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 void init() {
 	if (persist_exists(UNIT_TEMPERATURE))
 		t_unit = persist_read_bool(UNIT_TEMPERATURE);
+
+	if (persist_exists(ANIM_FREQ))
+		anim_freq = persist_read_int(ANIM_FREQ);
 	
 	// Create main Window element and assign to pointer
 	s_main_window = window_create();
