@@ -89,8 +89,10 @@ Pebble.addEventListener('webviewclosed',
 		console.log('Configuration window returned: ' + JSON.stringify(configuration));
  
 		//Send to Pebble, persist there
-		Pebble.sendAppMessage(
-			{'UNIT_TEMPERATURE': configuration.tunit},
+		Pebble.sendAppMessage({
+			'UNIT_TEMPERATURE': configuration.tunit,
+			'ANIM_FREQ': parseInt(configuration.afreq)
+			},
 			function(e) {
 				console.log('Sending settings data...');
 			},

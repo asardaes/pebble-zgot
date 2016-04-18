@@ -1,7 +1,8 @@
 {
     "appKeys": {
+        "WEATHER_TEMPERATURE": 0,
         "UNIT_TEMPERATURE": 1,
-        "WEATHER_TEMPERATURE": 0
+	"ANIM_FREQ": 2
     },
     "capabilities": [
         "location",
@@ -140,7 +141,7 @@
         "basalt"
     ],
     "uuid": "09d365d4-c918-43fd-9813-23fbd95b71ef",
-    "versionLabel": "3.0",
+    "versionLabel": "3.1",
     "watchapp": {
         "watchface": true
     }

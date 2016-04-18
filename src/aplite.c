@@ -19,6 +19,7 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
+static int anim_freq = 1;
 static int anim_index = 0;
 static int counter = 0;
 static bool anim = 0;
@@ -37,6 +38,7 @@ void animate() {
 	bool end = 0;
 	bool stop = 0; 
 	bool increase = direction;
+	int anim_target = 0;
 	
 	if ((counter >= 10) & (counter < 17)) {
 		increase = !direction;
@@ -116,11 +118,30 @@ void animate() {
 	
 	if (end) {
 		stop = 1;
+		time_t t = time(NULL);
+
+		switch (anim_freq) {
+			case 0:
+			anim_target = 0;
+			break;
+
+			case 1:
+			anim_target = t % 5;
+			break;
+
+			case 12:
+			anim_target = localtime(&t)->tm_sec / 12;
+			break;
+
+			case 60:
+			anim_target = localtime(&t)->tm_min % 5;
+			break;
+		}
 		
-		if ( (anim_index % 5) < (time(NULL) % 5) ) {
+		if ( (anim_index % 5) < anim_target ) {
 			stop = 0;
 			anim_index++;
-		} else if ( (anim_index % 5) > (time(NULL) % 5) ) {
+		} else if ( (anim_index % 5) > anim_target ) {
 			stop = 0;
 			anim_index--;
 		}
@@ -140,8 +161,8 @@ void animate() {
 
 void update_time() {
 	// Get a tm structure
-	time_t temp = time(NULL); 
-	struct tm *tick_time = localtime(&temp);
+	time_t t = time(NULL); 
+	struct tm *tick_time = localtime(&t);
 
 	// Write the current hours and minutes into the buffer
 	if(clock_is_24h_style() == true) {
@@ -178,9 +199,29 @@ void update_time() {
 	}
 }
 
-void rotate_gears(struct tm *tick_time, TimeUnits units_changed) {
+void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	if (!anim) {
-		switch (tick_time->tm_sec % 5) {
+		int which_case = 0;
+
+		switch (anim_freq) {
+			case 0:
+			which_case = 0;
+			break;
+
+			case 1:
+			which_case = tick_time->tm_sec % 5;
+			break;
+
+			case 12:
+			which_case = tick_time->tm_sec / 12;
+			break;
+
+			case 60:
+			which_case = tick_time->tm_min % 5;
+			break;
+		}
+
+		switch (which_case) {
 			case 0:
 			bitmap_layer_set_bitmap(s_gears_layer, s_gears_bitmap_0);
 			break;
@@ -475,6 +516,11 @@ void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 			weather_flag = 1;
 			get_weather();
 			break;
+
+			case ANIM_FREQ:
+			anim_freq = t->value->int32;
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Animation frequency: %d", anim_freq);
+			break;
 			
 			default:
 			APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -505,7 +551,7 @@ void init() {
 	window_stack_push(s_main_window, true);
 	
 	// Register with TickTimerService
-	tick_timer_service_subscribe(SECOND_UNIT, rotate_gears);
+	tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	
 	// Register battery service
 	battery_state_service_subscribe(&handle_battery);

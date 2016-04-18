@@ -12,7 +12,7 @@ void animate();
 
 void update_time();
 
-void rotate_gears(struct tm *tick_time, TimeUnits units_changed);
+void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 
 /* ===================================================================================================================== */
 

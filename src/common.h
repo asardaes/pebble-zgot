@@ -10,6 +10,10 @@
 #define UNIT_TEMPERATURE 1
 #endif
 
+#ifndef ANIM_FREQ
+#define ANIM_FREQ 2
+#endif
+
 /* ===================================================================================================================== */
 
 char *translate_error(AppMessageResult result);
