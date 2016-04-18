@@ -15,6 +15,22 @@
     </select>
     </p>
 
+    <p>Animation frequency:
+    <select id="anim_freq">
+      <option value=1>1 Second</option>
+      <option value=12>12 Seconds</option>
+      <option value=60>1 Minute</option>
+      <option value=0>Off</option>
+    </select>
+    </p>
+
+    <p>Shake event:
+    <select id="shake">
+      <option value=1>On</option>
+      <option value=0>Off</option>
+    </select>
+    </p>
+
     <p>
     <button id="save_button">Save</button>
     </p>
@@ -23,9 +39,13 @@
       //Setup to allow easy adding more options later
       function saveOptions() {
         var tunit = document.getElementById("unit_temperature");
+        var afreq = document.getElementById("anim_freq");
+        var shake = document.getElementById("shake");
 
         var options = {
-          "tunit": tunit.options[tunit.selectedIndex].value
+          "tunit": tunit.options[tunit.selectedIndex].value,
+          "afreq": afreq.options[afreq.selectedIndex].value,
+          "shake": shake.options[shake.selectedIndex].value
         }
         
         return options;
@@ -45,3 +65,4 @@
     </script>
   </body>
 </html>
+
