@@ -27,6 +27,7 @@ static bool weather_flag = true;
 static bool shake = true;
 static bool anim = false;
 static bool direction = false;
+static bool rupee = true; // seconds by default
 
 static uint32_t anim_duration = 75;
 
@@ -218,7 +219,11 @@ static void update_time() {
 	}
 	
 	strftime(min_buffer, sizeof("00"), "%M", tick_time);
-	strftime(second_buffer, sizeof(second_buffer), "%S", tick_time);
+
+	if (rupee)
+		strftime(second_buffer, sizeof(second_buffer), "%S", tick_time);
+	else
+		strftime(second_buffer, sizeof(second_buffer), "%j", tick_time);
 
 	// Display this time on the TextLayer
 	text_layer_set_text(s_hour_layer, hour_buffer);
@@ -367,7 +372,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			// true = Fahrenheit
 			if (temp_unit) {
 				snprintf(temperature, sizeof(temperature), "%d",  ((int)t->value->int32) * 9/5 + 32 );
-				//APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature in Fahrenheit: %d", ((int)t->value->int32) * 9/5 + 32);
 			} else {
 				snprintf(temperature, sizeof(temperature), "%d", (int)t->value->int32);
 			}
@@ -405,6 +409,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			shake = t->value->int32;
 			persist_write_bool(SHAKE, shake);
 			break;
+
+			case RUPEE:
+			rupee = strcmp(t->value->cstring, "S") == 0;
+			persist_write_bool(RUPEE, rupee);
+			break;
 			
 			default:
 			APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -414,6 +423,13 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 		// Look for next item
 		t = dict_read_next(iterator);
 	}
+
+	tick_timer_service_unsubscribe();
+
+	if ((anim_freq % 60 == 0) & !rupee)
+		tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+	else
+		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
@@ -439,6 +455,9 @@ void init() {
 
 	if (persist_exists(SHAKE))
 		shake = persist_read_bool(SHAKE);
+
+	if (persist_exists(RUPEE))
+		rupee = persist_read_bool(RUPEE);
 	
 	// Create main Window element and assign to pointer
 	s_main_window = window_create();
@@ -453,7 +472,10 @@ void init() {
 	window_stack_push(s_main_window, true);
 	
 	// Register with TickTimerService
-	tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+	if ((anim_freq % 60 == 0) & !rupee)
+		tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+	else
+		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 	
 	// Register battery service
 	battery_state_service_subscribe(&handle_battery);

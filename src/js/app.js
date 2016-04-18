@@ -77,6 +77,7 @@ Pebble.addEventListener('showConfiguration',
 	function(e) {
 		console.log('showConfiguration event');
 		Pebble.openURL('http://asardaes.github.io/pebble-zgot/');
+		//Pebble.openURL('https://dl.dropboxusercontent.com/u/8602374/Zelda_GoT_Config.html');
 	}
 );
 
@@ -92,7 +93,8 @@ Pebble.addEventListener('webviewclosed',
 		Pebble.sendAppMessage({
 			'UNIT_TEMPERATURE': configuration.tunit,
 			'ANIM_FREQ': parseInt(configuration.afreq),
-			'SHAKE': parseInt(configuration.shake)
+			'SHAKE': parseInt(configuration.shake),
+			'RUPEE': configuration.rupee
 			},
 			function(e) {
 				console.log('Sending settings data...');

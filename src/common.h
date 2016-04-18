@@ -18,6 +18,10 @@
 #define SHAKE 3
 #endif
 
+#ifndef RUPEE
+#define RUPEE 4
+#endif
+
 void handle_battery(BatteryChargeState charge_state);
 
 void init();
