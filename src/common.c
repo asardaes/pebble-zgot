@@ -504,7 +504,7 @@ void deinit() {
 	window_destroy(s_main_window);
 	tick_timer_service_unsubscribe();
 	battery_state_service_unsubscribe();
-	bluetooth_connection_service_unsubscribe();
+	connection_service_unsubscribe();
 	accel_tap_service_unsubscribe();
 }
 
