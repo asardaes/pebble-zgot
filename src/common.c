@@ -292,7 +292,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	update_time();
 	
 	if (units_changed & MINUTE_UNIT) {
-		if (bluetooth_connection_service_peek() && weather_flag) {
+		if (connection_service_peek_pebble_app_connection() && weather_flag) {
 			// Get initial weather, hopefully after things have settled down (AppMessage timing issues)...
 			// This also means that, if it fails at first, it will keep trying every minute (is that bad for battery?)
 			get_weather();
