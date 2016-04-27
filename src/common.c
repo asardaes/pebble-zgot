@@ -253,10 +253,6 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 			which_case = 0;
 			break;
 
-			case 1:
-			which_case = tick_time->tm_sec % 5;
-			break;
-
 			case 60:
 			which_case = tick_time->tm_min % 5;
 			break;
