@@ -20,7 +20,8 @@
                 "file": "images/no-hookshot.png",
                 "name": "IMAGE_NO_HOOKSHOT",
                 "targetPlatforms": [
-                    "basalt"
+                    "basalt",
+                    "chalk"
                 ],
                 "type": "bitmap"
             },
@@ -28,7 +29,8 @@
                 "file": "images/hookshot.png",
                 "name": "IMAGE_HOOKSHOT",
                 "targetPlatforms": [
-                    "basalt"
+                    "basalt",
+                    "chalk"
                 ],
                 "type": "bitmap"
             },
@@ -36,7 +38,8 @@
                 "file": "images/Buttons.png",
                 "name": "IMAGE_BUTTONS",
                 "targetPlatforms": [
-                    "basalt"
+                    "basalt",
+                    "chalk"
                 ],
                 "type": "bitmap"
             },
@@ -132,6 +135,19 @@
                 "characterRegex": "[0-9.\\-]",
                 "file": "fonts/HrMinSec.ttf",
                 "name": "FONT_ZELDA_16",
+                "targetPlatforms": [
+                    "aplite",
+                    "basalt"
+                ],
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9.\\-]",
+                "file": "fonts/HrMinSec.ttf",
+                "name": "FONT_ZELDA_14",
+                "targetPlatforms": [
+                    "chalk"
+                ],
                 "type": "font"
             }
         ]
@@ -140,10 +156,11 @@
     "shortName": "Zelda GoT",
     "targetPlatforms": [
         "aplite",
-        "basalt"
+        "basalt",
+	"chalk"
     ],
     "uuid": "09d365d4-c918-43fd-9813-23fbd95b71ef",
-    "versionLabel": "3.1",
+    "versionLabel": "4.0",
     "watchapp": {
         "watchface": true
     }

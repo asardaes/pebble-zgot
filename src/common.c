@@ -15,7 +15,7 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
-static int anim_freq = 1; // 1 second by default
+static int anim_freq = 0; // 1 second by default
 static int anim_index = 0;
 static int counter = 0;
 
@@ -307,21 +307,6 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 /* ===================================================================================================================== */
-
-void handle_battery(BatteryChargeState charge_state) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
-	
-	layer_set_frame(bitmap_layer_get_layer(heartsfill_layer), GRect(0, 168-20,
-									  7*charge_state.charge_percent/10, 
-									  20));
-	layer_mark_dirty(bitmap_layer_get_layer(heartsfill_layer));
-	
-	if (charge_state.is_charging) {
-		layer_set_hidden(bitmap_layer_get_layer(charge_layer), false);
-	} else {
-		layer_set_hidden(bitmap_layer_get_layer(charge_layer), true);
-	}
-}
 
 static void unshake() {
 	anim = 0;

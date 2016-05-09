@@ -32,6 +32,21 @@ void handle_bt(bool connected) {
 	}
 }
 
+void handle_battery(BatteryChargeState charge_state) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
+	
+	layer_set_frame(bitmap_layer_get_layer(heartsfill_layer), GRect(0, 168-20,
+									7*charge_state.charge_percent/10, 
+									20));
+	layer_mark_dirty(bitmap_layer_get_layer(heartsfill_layer));
+	
+	if (charge_state.is_charging) {
+		layer_set_hidden(bitmap_layer_get_layer(charge_layer), false);
+	} else {
+		layer_set_hidden(bitmap_layer_get_layer(charge_layer), true);
+	}
+}
+
 /* ===================================================================================================================== */
 
 void main_window_load(Window *window) {
