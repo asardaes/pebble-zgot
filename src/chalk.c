@@ -71,7 +71,7 @@ void main_window_load(Window *window) {
 	//gears_bitmap_4 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
 	
 	// Buttons layer
-	s_buttons_layer = bitmap_layer_create(GRect(105, 105, 64, 64));
+	s_buttons_layer = bitmap_layer_create(GRect(46, 180-33, 87, 30));
 	bitmap_layer_set_background_color(s_buttons_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_buttons_layer, GCompOpSet);
 	s_buttons_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BUTTONS);
@@ -79,7 +79,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_buttons_layer));
 	
 	// Hookshot layer
-	s_hookshot_layer = bitmap_layer_create(GRect(180-29, 180-72, 16, 16));
+	s_hookshot_layer = bitmap_layer_create(GRect(180-46-19, 180-30, 16, 16));
 	bitmap_layer_set_background_color(s_hookshot_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_hookshot_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_hookshot_layer));
@@ -135,7 +135,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(charge_layer));
 	
 	// Temperature layers
-	temp_layer = text_layer_create(GRect(129, 129, 25, 25));
+	temp_layer = text_layer_create(GRect(90-13, 180-26, 25, 25));
 	text_layer_set_background_color(temp_layer, GColorClear);
 	text_layer_set_text_color(temp_layer, GColorWhite);	
 	text_layer_set_font(temp_layer, s_zelda_font);
@@ -143,7 +143,7 @@ void main_window_load(Window *window) {
 	text_layer_set_text(temp_layer, "...");
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(temp_layer));
 	
-	degree_layer = text_layer_create(GRect(105, 105+64-19, 20, 20));
+	degree_layer = text_layer_create(GRect(46, 180-32, 20, 20));
 	text_layer_set_background_color(degree_layer, GColorClear);
 	text_layer_set_text_color(degree_layer, GColorWhite);	
 	text_layer_set_font(degree_layer, s_degree_font);
