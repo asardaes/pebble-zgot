@@ -17,8 +17,16 @@
     "resources": {
         "media": [
             {
+                "file": "images/navi.png",
+                "name": "IMAGE_NAVI",
+                "spaceOptimization": "memory",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
                 "file": "images/no-hookshot.png",
                 "name": "IMAGE_NO_HOOKSHOT",
+                "spaceOptimization": "memory",
                 "targetPlatforms": [
                     "basalt",
                     "chalk"
@@ -28,6 +36,7 @@
             {
                 "file": "images/hookshot.png",
                 "name": "IMAGE_HOOKSHOT",
+                "spaceOptimization": "memory",
                 "targetPlatforms": [
                     "basalt",
                     "chalk"
@@ -37,6 +46,7 @@
             {
                 "file": "images/Buttons.png",
                 "name": "IMAGE_BUTTONS",
+                "spaceOptimization": "memory",
                 "targetPlatforms": [
                     "basalt",
                     "chalk"
@@ -46,24 +56,28 @@
             {
                 "file": "images/rupee.png",
                 "name": "IMAGE_RUPEE",
+                "spaceOptimization": "memory",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
                 "file": "images/charge.png",
                 "name": "IMAGE_CHARGE",
+                "spaceOptimization": "memory",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
                 "file": "images/HeartsFill.png",
                 "name": "IMAGE_HEARTS_FILL",
+                "spaceOptimization": "memory",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
                 "file": "images/HeartsEdge.png",
                 "name": "IMAGE_HEARTS_EDGE",
+                "spaceOptimization": "memory",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },

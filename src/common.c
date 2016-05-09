@@ -3,7 +3,7 @@
 
 extern TextLayer *date_layer, *temp_layer, *degree_layer, *hour_layer, *min_layer, *second_layer;
 
-extern BitmapLayer *gears_layer, *heartsfill_layer, *charge_layer;
+extern BitmapLayer *gears_layer;
 
 extern GBitmap *gears_bitmap_0, *gears_bitmap_1, *gears_bitmap_2, *gears_bitmap_3, *gears_bitmap_4;
 
