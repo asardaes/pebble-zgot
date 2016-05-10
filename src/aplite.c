@@ -15,7 +15,7 @@ TextLayer *date_layer, *temp_layer, *degree_layer, *hour_layer, *min_layer, *sec
 
 BitmapLayer *gears_layer;
 
-GBitmap *gears_bitmap_0, *gears_bitmap_1, *gears_bitmap_2, *gears_bitmap_3, *gears_bitmap_4;
+GBitmap *gears_bitmap_a, *gears_bitmap_b;
 
 /* ===================================================================================================================== */
 
@@ -65,12 +65,15 @@ void main_window_load(Window *window) {
 	gears_layer = bitmap_layer_create(GRect(0, 0, 144, 144));
 	bitmap_layer_set_compositing_mode(gears_layer, GCompOpAssign);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(gears_layer));
-	
-	gears_bitmap_0 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
-	gears_bitmap_1 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_1);
-	gears_bitmap_2 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_2);
-	gears_bitmap_3 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_3);
-	gears_bitmap_4 = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
+
+	// Initialize bitmap_a
+	gears_bitmap_a = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
+	// Get a tm structure
+	time_t t = time(NULL); 
+	struct tm *tick_time = localtime(&t);
+	// Initialize bitmap_b
+	which_case(tick_time, true);
+	bitmap_layer_set_bitmap(gears_layer, gears_bitmap_b);
 	
 	// Buttons layer
 	s_buttons_layer = bitmap_layer_create(GRect(144-58, 168-58, 58, 58));
@@ -126,7 +129,7 @@ void main_window_load(Window *window) {
 	// Navi layer
 	s_navi_layer = bitmap_layer_create(GRect(1, 168-20-15-18, 18, 15));
 	bitmap_layer_set_background_color(s_navi_layer, GColorClear);
-	bitmap_layer_set_compositing_mode(s_navi_layer, GCompOpOr);
+	bitmap_layer_set_compositing_mode(s_navi_layer, GCompOpAssign);
 	s_navi_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_NAVI);
 	bitmap_layer_set_bitmap(s_navi_layer, s_navi_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_navi_layer));
@@ -183,6 +186,7 @@ void main_window_unload(Window *window) {
 	bitmap_layer_destroy(s_buttons_layer);
 	bitmap_layer_destroy(s_charge_layer);
 	bitmap_layer_destroy(s_rupee_layer);
+	bitmap_layer_destroy(s_navi_layer);
 	
 	// Destroy TextLayer
 	text_layer_destroy(date_layer);
@@ -193,11 +197,8 @@ void main_window_unload(Window *window) {
 	text_layer_destroy(second_layer);
 	
 	// Destroy GBitmap
-	gbitmap_destroy(gears_bitmap_0);
-	gbitmap_destroy(gears_bitmap_1);
-	gbitmap_destroy(gears_bitmap_2);
-	gbitmap_destroy(gears_bitmap_3);
-	gbitmap_destroy(gears_bitmap_4);
+	gbitmap_destroy(gears_bitmap_a);
+	gbitmap_destroy(gears_bitmap_b);
 	gbitmap_destroy(s_hearts_bitmap);
 	gbitmap_destroy(s_heartsfill_bitmap);
 	gbitmap_destroy(s_buttons_bitmap);

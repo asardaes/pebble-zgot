@@ -24,6 +24,7 @@
 
 void handle_battery(BatteryChargeState charge_state);
 void handle_bt(bool connected);
+void which_case(struct tm *tick_time, bool offset);
 
 void main_window_load(Window *window);
 void main_window_unload(Window *window);
