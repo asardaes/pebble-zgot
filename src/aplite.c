@@ -73,7 +73,6 @@ void main_window_load(Window *window) {
 	struct tm *tick_time = localtime(&t);
 	// Initialize bitmap_b
 	which_case(tick_time, true);
-	bitmap_layer_set_bitmap(gears_layer, gears_bitmap_b);
 	
 	// Buttons layer
 	s_buttons_layer = bitmap_layer_create(GRect(144-58, 168-58, 58, 58));

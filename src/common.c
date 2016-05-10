@@ -15,18 +15,19 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
-static int anim_freq = 0; // 1 second by default
+static int anim_freq = 1; // 1 second by default
 static int anim_index = 0;
 static int counter = 0;
-static int which_prev = 0;
+static int which_prev = -1;
 
 static bool weather_flag = true;
 static bool shake = true;
 static bool anim = false;
-static bool direction = false;
+static bool pos_dir = false;
+static bool increase = false;
 static bool rupee = true; // seconds by default
 
-static uint32_t anim_duration = 75;
+static uint32_t anim_duration = 60;
 
 bool temp_unit = false; // (°C) by default
 
@@ -76,191 +77,6 @@ static void get_weather() {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgSend: %s", translate_error(res));
 }
 
-/* ===================================================================================================================== */
-
-static void animate() {/*
-	bool end = 0;
-	bool stop = 0; 
-	bool increase = direction;
-	int anim_target = 0;
-	
-	if ((counter >= 10) & (counter < 17)) {
-		increase = !direction;
-		anim_duration = 125;
-	} else if ((counter >= 17) & (counter < 22)) {
-		anim_duration = 175;
-	} else if ((counter >= 22) & (counter < 25)) {
-		increase = !direction;
-		anim_duration = 225;
-	} else if (counter >= 25) {
-		end = 1;
-	}
-	
-	switch (anim_index % 5) {
-		case 0:
-		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_0);
-		
-		if (!end) {
-			if (increase)
-				anim_index++;
-			else
-				anim_index--;
-		}
-		
-		break;
-		// ===================================================================
-		case 1:
-		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_1);
-		
-		if (!end) {
-			if (increase)
-				anim_index++;
-			else
-				anim_index--;
-		}
-		
-		break;
-		// ===================================================================
-		case 2:
-		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_2);
-		
-		if (!end) {
-			if (increase)
-				anim_index++;
-			else
-				anim_index--;
-		}
-		
-		break;
-		// ===================================================================
-		case 3:
-		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_3);
-		
-		if (!end) {
-			if (increase)
-				anim_index++;
-			else
-				anim_index--;
-		}
-		
-		break;
-		// ===================================================================
-		case 4:
-		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_4);
-		
-		if (!end) {
-			if (increase)
-				anim_index++;
-			else
-				anim_index--;
-		}
-		
-		break;
-	}
-	
-	if (end) {
-		stop = 1;
-		time_t t = time(NULL);
-
-		switch (anim_freq) {
-			case 0:
-			anim_target = 0;
-			break;
-
-			case 1:
-			anim_target = t % 5;
-			break;
-
-			case 60:
-			anim_target = localtime(&t)->tm_min % 5;
-			break;
-
-			default:
-			anim_target = localtime(&t)->tm_sec / anim_freq % 5;
-			break;
-		}
-		
-		if ( (anim_index % 5) < anim_target ) {
-			stop = 0;
-			anim_index++;
-		} else if ( (anim_index % 5) > anim_target ) {
-			stop = 0;
-			anim_index--;
-		}
-	}
-	
-	if (stop) {
-		anim = 0;
-		counter = 0;
-		anim_duration = 75;
-	} else {
-		counter++;
-		app_timer_register(anim_duration, animate, NULL);
-	}*/
-}
-
-/* ===================================================================================================================== */
-
-void which_case(struct tm *tick_time, bool offset) {
-	int which = 0;
-
-	switch (anim_freq) {
-		case 0:
-		which = 0;
-		break;
-
-		case 60:
-		which = tick_time->tm_min % 5;
-		break;
-
-		default:
-		which = tick_time->tm_sec / anim_freq % 5;
-		break;
-	}
-
-	if (offset) {
-		if (which == 0) which = 4;
-		else which -= 1;
-
-		which_prev = which;
-	}
-
-	if (offset || which != which_prev) {
-		//APP_LOG(APP_LOG_LEVEL_DEBUG, "Tick case: %d", which);
-
-		if (!offset) {
-			GBitmap *temp_bitmap = gears_bitmap_a;
-			gears_bitmap_a = gears_bitmap_b;
-			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_a);
-			gbitmap_destroy(temp_bitmap);
-
-			which_prev = which;
-		}
-
-		switch (which) {
-			case 0:
-			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_1);
-			break;
-
-			case 1:
-			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_2);
-			break;
-
-			case 2:
-			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_3);
-			break;
-
-			case 3:
-			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
-			break;
-
-			case 4:
-			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
-			break;
-		}
-	}
-}
-
 static void update_time() {
 	// Get a tm structure
 	time_t t = time(NULL); 
@@ -305,6 +121,169 @@ static void update_time() {
 	}
 }
 
+static int check_freq(struct tm *tick_time) {
+	switch (anim_freq) {
+		case 0:
+		return 0;
+		break;
+
+		case 60:
+		return tick_time->tm_min % 5;
+		break;
+
+		default:
+		return tick_time->tm_sec / anim_freq % 5;
+		break;
+	}
+}
+
+/* ===================================================================================================================== */
+
+static void animate() {
+	bool end = 0;
+	bool stop = 0; 
+	int anim_target = 0;
+	struct tm *tick_time;
+	
+	if (counter == 10) {
+		increase = !pos_dir;
+		anim_duration += 50;
+	} else if (counter == 17) {
+		anim_duration += 50;
+		increase = pos_dir;
+	} else if (counter == 22) {
+		increase = !pos_dir;
+		anim_duration += 50;
+	} else if (counter >= 25) {
+		end = 1;
+	}
+
+	if (counter > 0) {
+		GBitmap *temp_bitmap = gears_bitmap_a;
+		gears_bitmap_a = gears_bitmap_b;
+		bitmap_layer_set_bitmap(gears_layer, gears_bitmap_a);
+		gbitmap_destroy(temp_bitmap);
+
+	} else {
+		gbitmap_destroy(gears_bitmap_b);
+	}
+
+	switch ((increase ? anim_index + 1 : anim_index - 1) % 5) {
+		case 0:
+		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
+		break;
+
+		case 1:
+		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_1);
+		break;
+
+		case 2:
+		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_2);
+		break;
+
+		case 3:
+		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_3);
+		break;
+
+		case 4:
+		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
+		break;
+	}
+	
+	if (end) {
+		stop = true;
+		time_t t = time(NULL);
+		tick_time = localtime(&t);
+
+		anim_target = check_freq(tick_time);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Anim index: %d", anim_index);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Anim index MOD 5: %d", anim_index % 5);
+		
+		if ( (anim_index % 5) < anim_target ) {
+			stop = false;
+			increase = true;
+			anim_index++;
+
+		} else if ( (anim_index % 5) > anim_target ) {
+			stop = false;
+			increase = false;
+			anim_index--;
+		}
+
+	} else {
+		if (increase)
+			anim_index++;
+		else
+			anim_index--;
+	}
+	
+	if (stop) {
+		anim = false;
+		counter = 0;
+		anim_duration -= 150;
+
+		gbitmap_destroy(gears_bitmap_b);
+		which_case(tick_time, true);
+		update_time();
+
+	} else {
+		counter++;
+		app_timer_register(anim_duration, animate, NULL);
+	}
+}
+
+/* ===================================================================================================================== */
+
+void which_case(struct tm *tick_time, bool offset) {
+	int which = 0;
+
+	which = check_freq(tick_time);
+
+	if (offset) {
+		if (which == 0) which = 4;
+		else which -= 1;
+	}
+
+	if (offset || which != which_prev) {
+		//APP_LOG(APP_LOG_LEVEL_DEBUG, "Tick case: %d", which);
+
+		if (!offset) {
+			GBitmap *temp_bitmap = gears_bitmap_a;
+			gears_bitmap_a = gears_bitmap_b;
+			bitmap_layer_set_bitmap(gears_layer, gears_bitmap_a);
+			gbitmap_destroy(temp_bitmap);
+
+			which_prev = which;
+		}
+
+		// Preload
+		switch (which) {
+			case 0:
+			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_1);
+			break;
+
+			case 1:
+			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_2);
+			break;
+
+			case 2:
+			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_3);
+			break;
+
+			case 3:
+			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
+			break;
+
+			case 4:
+			gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_0);
+			break;
+		}
+
+		// Call again to preload next. This assumes gears_bitmap_a != NULL
+		if (offset) which_case(tick_time, false);
+	}
+}
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	if (!shake | !anim) {
 		which_case(tick_time, false);
@@ -334,25 +313,32 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 /* ===================================================================================================================== */
 
 static void unshake() {
-	anim = 0;
+	anim = false;
 }
 
 static void handle_tap(AccelAxisType axis, int32_t dir) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Entering handle_tap");
 	
 	if (!anim) {
+		// Get a tm structure
+		time_t t = time(NULL); 
+		struct tm *tick_time = localtime(&t);
+
+		anim_index = check_freq(tick_time);
+
 		if (dir > 0) {
-			direction = 1;
-			anim_index = (int)(time(NULL) % 5);
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "Positive direction.");
+			pos_dir = true;
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Positive pos_dir.");
 		} else {
-			direction = 0;
-			anim_index = (int)(time(NULL) % 5) + 100; // avoid negative values due to MOD operation
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "Negative direction.");
+			pos_dir = false;
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Negative pos_dir.");
 		}
 
-		anim = 1;
+		anim_index += 100; // avoid negative values due to MOD operation
+		anim = true;
 		update_time();
+		increase = pos_dir;
+
 		if (shake)
 			animate();
 		else
