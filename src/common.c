@@ -15,7 +15,7 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
-static int anim_freq = 0; // 1 second by default
+static int anim_freq = 1; // 1 second by default
 static int anim_index = 0;
 static int counter = 0;
 static int which_prev = -1;
