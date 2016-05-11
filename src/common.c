@@ -15,7 +15,7 @@ static char second_buffer[4];
 static char hour_buffer[] = "00";
 static char min_buffer[] = "00";
 
-static int anim_freq = 1; // 1 second by default
+static int anim_freq = 0; // 1 second by default
 static int anim_index = 0;
 static int counter = 0;
 static int which_prev = -1;
@@ -103,14 +103,6 @@ static void update_time() {
 	text_layer_set_text(min_layer, min_buffer);
 	text_layer_set_text(second_layer, second_buffer);
 
-	// Debug
-	/*
-	text_layer_set_text(hour_layer, "12");
-	text_layer_set_text(min_layer, "34");
-	snprintf(second_buffer, sizeof(second_buffer), "0%d", (int)(time(NULL) % 5));
-	text_layer_set_text(second_layer, second_buffer);
-	*/
-	
 	// Date
 	if (!anim) {
 		strftime(date_buffer, sizeof(date_buffer), "%a %d", tick_time);
@@ -119,6 +111,15 @@ static void update_time() {
 		strftime(date_buffer, sizeof(date_buffer), "%b '%y", tick_time);
 		text_layer_set_text(date_layer, date_buffer);
 	}
+
+	// Debug
+	/*
+	text_layer_set_text(hour_layer, "00");
+	text_layer_set_text(min_layer, "00");
+	//text_layer_set_text(date_layer, "Wed 08");
+	snprintf(second_buffer, sizeof(second_buffer), "0%d", (int)(time(NULL) % 5));
+	text_layer_set_text(second_layer, second_buffer);
+	*/
 }
 
 static int check_freq(struct tm *tick_time) {
@@ -196,8 +197,6 @@ static void animate() {
 		tick_time = localtime(&t);
 
 		anim_target = check_freq(tick_time);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Anim index: %d", anim_index);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Anim index MOD 5: %d", anim_index % 5);
 		
 		if ( (anim_index % 5) < anim_target ) {
 			stop = false;

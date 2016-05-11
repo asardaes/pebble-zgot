@@ -35,7 +35,7 @@ void handle_bt(bool connected) {
 void handle_battery(BatteryChargeState charge_state) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery percentage: %d.", charge_state.charge_percent);
 	
-	layer_set_frame(bitmap_layer_get_layer(s_heartsfill_layer), GRect(90-27, 6,
+	layer_set_frame(bitmap_layer_get_layer(s_heartsfill_layer), GRect(90-27, 5,
 									  5.5*charge_state.charge_percent/10, 
 									  12));
 	
@@ -56,12 +56,12 @@ void main_window_load(Window *window) {
 	window_set_background_color(window, GColorOxfordBlue);
 	
 	// Assign GFont
-	s_zelda_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ZELDA_14));
+	s_zelda_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ZELDA_15));
 	s_zelda_font_small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_DATE_16));
 	s_degree_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_DEGREE_14));
 	
 	// Gears layers
-	gears_layer = bitmap_layer_create(GRect(0, 0, 180, 150));
+	gears_layer = bitmap_layer_create(GRect(0, 0, 180, 149));
 	bitmap_layer_set_background_color(gears_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(gears_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(gears_layer));
@@ -75,7 +75,7 @@ void main_window_load(Window *window) {
 	which_case(tick_time, true);
 	
 	// Buttons layer
-	s_buttons_layer = bitmap_layer_create(GRect(46, 180-33, 87, 30));
+	s_buttons_layer = bitmap_layer_create(GRect(46, 180-32, 88, 30));
 	bitmap_layer_set_background_color(s_buttons_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_buttons_layer, GCompOpSet);
 	s_buttons_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BUTTONS);
@@ -83,24 +83,23 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_buttons_layer));
 	
 	// Hookshot layer
-	s_hookshot_layer = bitmap_layer_create(GRect(180-46-19, 180-30, 16, 16));
+	s_hookshot_layer = bitmap_layer_create(GRect(180-46-18, 180-29, 16, 16));
 	bitmap_layer_set_background_color(s_hookshot_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_hookshot_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_hookshot_layer));
 	
 	// Hour and Minute layer
 	int side = 29;
-	int offset_x = 20;
 	int offset_y = 25;
 	
-	hour_layer = text_layer_create(GRect(offset_x, offset_y, side, side));
+	hour_layer = text_layer_create(GRect(20, offset_y, side, side));
 	text_layer_set_background_color(hour_layer, GColorClear);
 	text_layer_set_text_color(hour_layer, GColorWhite);	
 	text_layer_set_font(hour_layer, s_zelda_font);
 	text_layer_set_text_alignment(hour_layer, GTextAlignmentCenter);
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(hour_layer));
 	
-	min_layer = text_layer_create(GRect(180 - offset_x - side, offset_y, side, side));
+	min_layer = text_layer_create(GRect(180 - 19 - side, offset_y, side, side));
 	text_layer_set_background_color(min_layer, GColorClear);
 	text_layer_set_text_color(min_layer, GColorWhite);	
 	text_layer_set_font(min_layer, s_zelda_font);
@@ -108,7 +107,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(min_layer));
 		
 	// Date layer
-	date_layer = text_layer_create(GRect(0, 14, 180, 30));
+	date_layer = text_layer_create(GRect(1, 14, 179, 30));
 	text_layer_set_background_color(date_layer, GColorClear);
 	text_layer_set_text_color(date_layer, GColorWhite);	
 	text_layer_set_font(date_layer, s_zelda_font_small);
@@ -116,14 +115,14 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(date_layer));	
 	
 	// Hearts layers
-	s_heartsfill_layer = bitmap_layer_create(GRect(90-27, 6, 55, 12));
+	s_heartsfill_layer = bitmap_layer_create(GRect(90-27, 5, 55, 12));
 	bitmap_layer_set_background_color(s_heartsfill_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_heartsfill_layer, GCompOpSet);
 	s_heartsfill_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEARTS_FILL);
 	bitmap_layer_set_bitmap(s_heartsfill_layer, s_heartsfill_bitmap);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_heartsfill_layer));
 	
-	s_hearts_layer = bitmap_layer_create(GRect(90-27, 6, 55, 12));
+	s_hearts_layer = bitmap_layer_create(GRect(90-27, 5, 55, 12));
 	bitmap_layer_set_background_color(s_hearts_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_hearts_layer, GCompOpSet);
 	s_hearts_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEARTS_EDGE);
@@ -139,7 +138,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_charge_layer));
 
 	// Navi layer
-	s_navi_layer = bitmap_layer_create(GRect(180-28, 90-10, 24, 19));
+	s_navi_layer = bitmap_layer_create(GRect(180-27, 90-10, 24, 19));
 	bitmap_layer_set_background_color(s_navi_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_navi_layer, GCompOpSet);
 	s_navi_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_NAVI);
@@ -147,7 +146,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_navi_layer));
 	
 	// Temperature layers
-	temp_layer = text_layer_create(GRect(90-13, 180-26, 25, 25));
+	temp_layer = text_layer_create(GRect(90-12, 180-26, 25, 25));
 	text_layer_set_background_color(temp_layer, GColorClear);
 	text_layer_set_text_color(temp_layer, GColorWhite);	
 	text_layer_set_font(temp_layer, s_zelda_font);
@@ -155,7 +154,7 @@ void main_window_load(Window *window) {
 	text_layer_set_text(temp_layer, "...");
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(temp_layer));
 	
-	degree_layer = text_layer_create(GRect(46, 180-32, 20, 20));
+	degree_layer = text_layer_create(GRect(46, 180-31, 20, 20));
 	text_layer_set_background_color(degree_layer, GColorClear);
 	text_layer_set_text_color(degree_layer, GColorWhite);	
 	text_layer_set_font(degree_layer, s_degree_font);

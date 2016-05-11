@@ -62,7 +62,7 @@ void main_window_load(Window *window) {
 	s_degree_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_DEGREE_14));
 	
 	// Gears layers
-	gears_layer = bitmap_layer_create(GRect(0, 0, 144, 144));
+	gears_layer = bitmap_layer_create(GRect(0, 0, 144, 142));
 	bitmap_layer_set_background_color(gears_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(gears_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(gears_layer));
@@ -76,7 +76,7 @@ void main_window_load(Window *window) {
 	which_case(tick_time, true);
 	
 	// Buttons layer
-	s_buttons_layer = bitmap_layer_create(GRect(144-58, 168-58, 58, 58));
+	s_buttons_layer = bitmap_layer_create(GRect(144-57, 168-57, 57, 57));
 	bitmap_layer_set_background_color(s_buttons_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_buttons_layer, GCompOpSet);
 	s_buttons_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BUTTONS);
@@ -84,7 +84,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_buttons_layer));
 	
 	// Hookshot layer
-	s_hookshot_layer = bitmap_layer_create(GRect(144-19, 168-55, 16, 16));
+	s_hookshot_layer = bitmap_layer_create(GRect(144-19, 168-54, 16, 16));
 	bitmap_layer_set_background_color(s_hookshot_layer, GColorClear);
 	bitmap_layer_set_compositing_mode(s_hookshot_layer, GCompOpSet);
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_hookshot_layer));
@@ -107,7 +107,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(min_layer));
 		
 	// Date layer
-	date_layer = text_layer_create(GRect(0, 0, 144, 50));
+	date_layer = text_layer_create(GRect(1, 1, 143, 50));
 	text_layer_set_background_color(date_layer, GColorClear);
 	text_layer_set_text_color(date_layer, GColorWhite);	
 	text_layer_set_font(date_layer, s_zelda_font_small);
@@ -154,7 +154,7 @@ void main_window_load(Window *window) {
 	text_layer_set_text(temp_layer, "...");
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(temp_layer));
 	
-	degree_layer = text_layer_create(GRect(144-58, 168-19, 20, 20));
+	degree_layer = text_layer_create(GRect(144-57, 168-19, 20, 20));
 	text_layer_set_background_color(degree_layer, GColorClear);
 	text_layer_set_text_color(degree_layer, GColorWhite);	
 	text_layer_set_font(degree_layer, s_degree_font);

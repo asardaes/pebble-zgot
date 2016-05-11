@@ -158,7 +158,7 @@
             {
                 "characterRegex": "[0-9.\\-]",
                 "file": "fonts/HrMinSec.ttf",
-                "name": "FONT_ZELDA_14",
+                "name": "FONT_ZELDA_15",
                 "targetPlatforms": [
                     "chalk"
                 ],
