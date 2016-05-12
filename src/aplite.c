@@ -163,7 +163,7 @@ void main_window_load(Window *window) {
 	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_rupee_layer));
 	
 	// Seconds layer
-	second_layer = text_layer_create(GRect(17, 168-38, 30, 15));
+	second_layer = text_layer_create(GRect(17, 168-38, 30, 20));
 	text_layer_set_background_color(second_layer, GColorClear);
 	text_layer_set_text_color(second_layer, GColorWhite);
 	text_layer_set_font(second_layer, s_zelda_font_small);

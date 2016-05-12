@@ -93,24 +93,28 @@ static void update_time() {
 	
 	strftime(min_buffer, sizeof("00"), "%M", tick_time);
 
-	if (rupee)
-		strftime(second_buffer, sizeof(second_buffer), "%S", tick_time);
-	else
-		strftime(second_buffer, sizeof(second_buffer), "%j", tick_time);
+	// Date + seconds
+	if (!anim) {
+		if (rupee)
+			strftime(second_buffer, sizeof(second_buffer), "%S", tick_time);
+		else
+			strftime(second_buffer, sizeof(second_buffer), "%j", tick_time);
+
+		text_layer_set_text(second_layer, second_buffer);
+
+		strftime(date_buffer, sizeof(date_buffer), "%a %d", tick_time);
+		text_layer_set_text(date_layer, date_buffer);
+
+	} else {
+		text_layer_set_text(second_layer, "Hey!");
+
+		strftime(date_buffer, sizeof(date_buffer), "%b '%y", tick_time);
+		text_layer_set_text(date_layer, date_buffer);
+	}
 
 	// Display this time on the TextLayer
 	text_layer_set_text(hour_layer, hour_buffer);
 	text_layer_set_text(min_layer, min_buffer);
-	text_layer_set_text(second_layer, second_buffer);
-
-	// Date
-	if (!anim) {
-		strftime(date_buffer, sizeof(date_buffer), "%a %d", tick_time);
-		text_layer_set_text(date_layer, date_buffer);
-	} else {
-		strftime(date_buffer, sizeof(date_buffer), "%b '%y", tick_time);
-		text_layer_set_text(date_layer, date_buffer);
-	}
 
 	// Debug
 	/*
