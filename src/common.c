@@ -9,7 +9,7 @@ extern GBitmap *gears_bitmap_a, *gears_bitmap_b;
 
 static Window *s_main_window;
 
-static char temperature[8];
+static char temperature[12];
 static char date_buffer[8];
 static char second_buffer[4];
 static char hour_buffer[] = "00";
@@ -58,7 +58,7 @@ static void get_weather() {
 
 	// Begin dictionary
 	DictionaryIterator *iter;
-	
+
 	AppMessageResult res = app_message_outbox_begin(&iter);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgBegin: %s", translate_error(res));
 
@@ -79,7 +79,7 @@ static void get_weather() {
 
 static void update_time() {
 	// Get a tm structure
-	time_t t = time(NULL); 
+	time_t t = time(NULL);
 	struct tm *tick_time = localtime(&t);
 
 	// Write the current hours and minutes into the buffer
@@ -90,7 +90,7 @@ static void update_time() {
 		// Use 12 hour format
 		strftime(hour_buffer, sizeof("00"), "%I", tick_time);
 	}
-	
+
 	strftime(min_buffer, sizeof("00"), "%M", tick_time);
 
 	// Date + seconds
@@ -146,10 +146,10 @@ static int check_freq(struct tm *tick_time) {
 
 static void animate() {
 	bool end = 0;
-	bool stop = 0; 
+	bool stop = 0;
 	int anim_target = 0;
 	struct tm *tick_time;
-	
+
 	if (counter == 10) {
 		increase = !pos_dir;
 		anim_duration += 50;
@@ -194,14 +194,14 @@ static void animate() {
 		gears_bitmap_b = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GEARS_4);
 		break;
 	}
-	
+
 	if (end) {
 		stop = true;
 		time_t t = time(NULL);
 		tick_time = localtime(&t);
 
 		anim_target = check_freq(tick_time);
-		
+
 		if ( (anim_index % 5) < anim_target ) {
 			stop = false;
 			increase = true;
@@ -219,7 +219,7 @@ static void animate() {
 		else
 			anim_index--;
 	}
-	
+
 	if (stop) {
 		anim = false;
 		counter = 0;
@@ -291,9 +291,9 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 	if (!shake | !anim) {
 		which_case(tick_time, false);
 	}
-	
+
 	update_time();
-	
+
 	if (units_changed & MINUTE_UNIT) {
 		if (connection_service_peek_pebble_app_connection() && weather_flag) {
 			// Get initial weather, hopefully after things have settled down (AppMessage timing issues)...
@@ -301,13 +301,13 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 			get_weather();
 		}
 	}
-	
+
 	// Get weather update every hour
 	if (units_changed & HOUR_UNIT) {
 		// To mark that temperature should be updated
 		weather_flag = 1;
 		text_layer_set_text(temp_layer, "...");
-		
+
 		// Try to get weather
 		get_weather();
 	}
@@ -321,10 +321,10 @@ static void unshake() {
 
 static void handle_tap(AccelAxisType axis, int32_t dir) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Entering handle_tap");
-	
+
 	if (!anim) {
 		// Get a tm structure
-		time_t t = time(NULL); 
+		time_t t = time(NULL);
 		struct tm *tick_time = localtime(&t);
 
 		anim_index = check_freq(tick_time);
@@ -354,7 +354,7 @@ static void handle_tap(AccelAxisType axis, int32_t dir) {
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
 	// Read first item
 	Tuple *t = dict_read_first(iterator);
-	
+
 	// For all items
 	while(t != NULL) {
 		// Which key was received?
@@ -367,11 +367,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 				snprintf(temperature, sizeof(temperature), "%d", (int)t->value->int32);
 			}
 			text_layer_set_text(temp_layer, temperature);
-			
+
 			// Mark that weather shouldn't be updated any more
-			weather_flag = 0; 
+			weather_flag = 0;
 			break;
-			
+
 			case UNIT_TEMPERATURE:
 			if (strcmp(t->value->cstring, "C") == 0) {
 				persist_write_bool(UNIT_TEMPERATURE, false);
@@ -384,7 +384,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 				temp_unit = 1;
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Setting temperature units to fahrenheit");
 			}
-			
+
 			text_layer_set_text(temp_layer, "...");
 			weather_flag = 1;
 			get_weather();
@@ -405,7 +405,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 			rupee = strcmp(t->value->cstring, "S") == 0;
 			persist_write_bool(RUPEE, rupee);
 			break;
-			
+
 			default:
 			APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
 			break;
@@ -449,7 +449,7 @@ void init() {
 
 	if (persist_exists(RUPEE))
 		rupee = persist_read_bool(RUPEE);
-	
+
 	// Create main Window element and assign to pointer
 	s_main_window = window_create();
 
@@ -461,34 +461,34 @@ void init() {
 
 	// Show the Window on the watch, with animated=true
 	window_stack_push(s_main_window, true);
-	
+
 	// Register with TickTimerService
 	if ((anim_freq % 60 == 0) & !rupee)
 		tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 	else
 		tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
-	
+
 	// Register battery service
 	battery_state_service_subscribe(handle_battery);
-	
+
 	// Register bluetooth service
 	connection_service_subscribe((ConnectionHandlers) {
 		.pebble_app_connection_handler = handle_bt,
 		NULL
 	});
-	
+
 	// Subscribe to the accelerometer tap service
 	accel_tap_service_subscribe(handle_tap);
-	
+
 	// Make sure the time is displayed from the start
 	update_time();
-	
+
 	// Register callbacks
 	app_message_register_inbox_received(inbox_received_callback);
 	app_message_register_inbox_dropped(inbox_dropped_callback);
 	app_message_register_outbox_failed(outbox_failed_callback);
 	app_message_register_outbox_sent(outbox_sent_callback);
-	
+
 	// Open AppMessage
 	AppMessageResult res = app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "AppMsgOpen: %s", translate_error(res));
